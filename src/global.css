@@ -46,16 +46,44 @@ body {
     font-weight: 800;
 }
 
-/* --- Кнопки источников (Горизонтальная прокрутка) --- */
+/* --- Кнопки источников --- */
 .sources-buttons {
     display: flex;
-    gap: 15px;
+    gap: 12px;
     margin-bottom: 30px;
-    /* Включаем горизонтальную прокрутку, как на скрине */
-    overflow-x: auto;
+    overflow-x: auto; /* Горизонтальная прокрутка */
     padding-bottom: 15px;
-    scrollbar-width: thin;
-    scrollbar-color: #484f58 var(--bg-color);
+    /* Скрываем стандартный скроллбар для красоты (опционально) */
+    scrollbar-width: none; 
+}
+.sources-buttons::-webkit-scrollbar {
+    display: none;
+}
+
+.source-btn {
+    padding: 10px 24px;
+    background-color: transparent;
+    border: 1px solid #30363d; /* Темная рамка */
+    border-radius: 30px; /* Сильное скругление (таблетка) */
+    cursor: pointer;
+    color: #c9d1d9;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap; /* Текст не переносится */
+    transition: all 0.3s ease;
+}
+
+.source-btn:hover {
+    background-color: #21262d;
+    border-color: #8b949e;
+    color: #ffffff;
+}
+
+/* Активная кнопка (если выберете конкретный источник) */
+.source-btn.active {
+    background-color: rgba(46, 160, 67, 0.15); /* Легкий зеленый фон */
+    border-color: #2ea043; /* Зеленая рамка */
+    color: #2ea043; /* Зеленый текст */
 }
 
 /* Стилизация полосы прокрутки для Webkit (Chrome/Safari) */

@@ -7,7 +7,7 @@
         "start": "webpack serve --open --config ./webpack.config.js --env mode=dev",
         "build": "webpack --config ./webpack.config.js --env mode=prod",
         "predeploy": "npm run build",
-        "deploy": "gh-pages -d dist",
+        "deploy": "gh-pages -d dist -m \"chore: update build\"",
         "lint": "eslint . --ext .ts"
     },
     "repository": {

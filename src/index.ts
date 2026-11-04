@@ -1,18 +1,14 @@
-// 1. Объявляем process для TypeScript (чтобы он не ругался)
-declare const process: { env: { API_KEY: string } };
-
 import './global.css'; // Подключаем стили
 import { NewsApi } from './api/NewsApi';
 import { NewsCard } from './components/NewsCard';
 import { IArticle } from './types/types';
-import { NewsCategory } from './types/enums'; // Используем enum
 
 // Инициализация
-const api = new NewsApi(process.env.API_KEY || '');
+const api = new NewsApi(); // Ключ не нужен, мы используем прокси
 const cardRenderer = new NewsCard();
 const newsContainer = document.querySelector('.news-grid') as HTMLElement;
 
-// Функция отрисовки (типизирована, ничего не возвращает -> void)
+// Отрисовка карточек
 function renderNews(articles: IArticle[]): void {
   newsContainer.innerHTML = ''; // Очищаем контейнер
   
@@ -22,16 +18,24 @@ function renderNews(articles: IArticle[]): void {
   });
 }
 
-// Асинхронная загрузка данных
+// Загрузка данных с прокси
 async function loadNews(): Promise<void> {
   try {
-    // Пример использования Enum
-    const articles = await api.getTopHeadlines(NewsCategory.GENERAL);
-    renderNews(articles);
+    // Вызываем БЕЗ аргументов, так как мы изменили NewsApi
+    const articles = await api.getTopHeadlines();
+    
+    // Выводим в консоль, чтобы убедиться, что данные пришли
+    console.log('Данные от API:', articles); 
+    
+    // Если данные есть, рендерим
+    if (articles && articles.length > 0) {
+        renderNews(articles);
+    } else {
+        console.warn('Массив новостей пуст');
+    }
   } catch (error: unknown) {
-    // Обработка ошибки без any
     if (error instanceof Error) {
-      console.error('Failed to load news:', error.message);
+      console.error('Ошибка загрузки:', error.message);
     }
   }
 }
