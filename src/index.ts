@@ -1,44 +1,72 @@
-import './global.css'; // Подключаем стили
+import './global.css';
 import { NewsApi } from './api/NewsApi';
 import { NewsCard } from './components/NewsCard';
-import { IArticle } from './types/types';
+import { SourceList } from './components/SourceList'; 
+import { IArticle, ISource } from './types/types';
 
-// Инициализация
-const api = new NewsApi(); // Ключ не нужен, мы используем прокси
+const api = new NewsApi();
 const cardRenderer = new NewsCard();
+const sourceList = new SourceList('.sources-buttons'); 
 const newsContainer = document.querySelector('.news-grid') as HTMLElement;
 
-// Отрисовка карточек
+
+let allArticles: IArticle[] = [];
+
+
 function renderNews(articles: IArticle[]): void {
-  newsContainer.innerHTML = ''; // Очищаем контейнер
-  
+  newsContainer.innerHTML = '';
+  if (articles.length === 0) {
+    newsContainer.innerHTML = '<p style="color: white;">Новостей не найдено.</p>';
+    return;
+  }
   articles.forEach((article: IArticle) => {
     const card = cardRenderer.render(article);
     newsContainer.appendChild(card);
   });
 }
 
-// Загрузка данных с прокси
-async function loadNews(): Promise<void> {
+
+function filterNewsBySource(sourceId: string): void {
+  if (!sourceId) {
+    renderNews(allArticles); 
+    return;
+  }
+  
+
+  const filtered = allArticles.filter(article => {
+   
+      return article.source && article.source.name === sourceId;
+  });
+  
+  renderNews(filtered);
+}
+
+
+async function loadData(): Promise<void> {
   try {
-    // Вызываем БЕЗ аргументов, так как мы изменили NewsApi
-    const articles = await api.getTopHeadlines();
+
+    const [articles, sources] = await Promise.all([
+      api.getTopHeadlines(),
+      api.getSources()
+    ]);
+
+    allArticles = articles; 
+
     
-    // Выводим в консоль, чтобы убедиться, что данные пришли
-    console.log('Данные от API:', articles); 
+    renderNews(allArticles);
+
     
-    // Если данные есть, рендерим
-    if (articles && articles.length > 0) {
-        renderNews(articles);
-    } else {
-        console.warn('Массив новостей пуст');
-    }
+    sourceList.render(sources, (sourceId: string) => {
+     
+        filterNewsBySource(sourceId);
+    });
+
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error('Ошибка загрузки:', error.message);
+      console.error('Failed to load data:', error.message);
     }
   }
 }
 
-// Запуск
-loadNews();
+
+loadData();

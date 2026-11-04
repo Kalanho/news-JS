@@ -1,8 +1,13 @@
-// Объектные типы (Object Types) для ответа API
+
 export interface ISource {
-    id: string | null;
-    name: string;
-  }
+  id: string;
+  name: string;
+  description: string;
+  url: string;
+  category: string;
+  language: string;
+  country: string;
+}
   
   export interface IArticle {
     source: ISource;
