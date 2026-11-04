@@ -1,35 +1,243 @@
+/* --- Базовые настройки (Темная тема) --- */
+:root {
+    --bg-color: #161b22;       /* Темный фон */
+    --header-bg: #0d1117;      /* Еще более темная шапка */
+    --card-bg: #ffffff;        /* Белые карточки */
+    --text-main: #c9d1d9;      /* Светлый текст для темного фона */
+    --text-dark: #24292f;      /* Темный текст для белых карточек */
+    --text-muted: #8b949e;     /* Серый текст */
+    --accent-green: #2ea043;   /* Зеленый цвет для ссылок Read More */
+    --accent-blue: #58a6ff;    /* Синий для кнопок */
+    --border-color: #30363d;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 body {
-    color: #fff;
-    background: #17181c;
-    font-family: sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
-header {
-    padding: 10px 30px;
+.container {
+    width: 100%;
+    max-width: 1920px; /* Максимальная ширина по ТЗ */
+    margin: 0 auto;
+    padding: 0 20px;
 }
 
-header h1 {
-    font-size: 40px;
+/* --- Шапка --- */
+.header {
+    background-color: var(--header-bg);
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 20px;
+}
+.header__title {
+    color: #ffffff;
+    font-size: 28px;
     font-weight: 800;
 }
 
-footer {
-    height: 100px;
+/* --- Кнопки источников (Горизонтальная прокрутка) --- */
+.sources-buttons {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+    /* Включаем горизонтальную прокрутку, как на скрине */
+    overflow-x: auto;
+    padding-bottom: 15px;
+    scrollbar-width: thin;
+    scrollbar-color: #484f58 var(--bg-color);
+}
+
+/* Стилизация полосы прокрутки для Webkit (Chrome/Safari) */
+.sources-buttons::-webkit-scrollbar {
+    height: 8px;
+}
+.sources-buttons::-webkit-scrollbar-track {
+    background: var(--bg-color);
+}
+.sources-buttons::-webkit-scrollbar-thumb {
+    background-color: #484f58;
+    border-radius: 10px;
+}
+
+.source-btn {
+    padding: 10px 20px;
+    background: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--text-main);
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap; /* Текст не переносится на новую строку */
+    transition: all 0.2s ease;
+}
+
+.source-btn:hover {
+    border-color: var(--accent-blue);
+    color: var(--accent-blue);
+}
+
+.source-btn.active {
+    border-color: var(--accent-blue);
+    color: var(--accent-blue);
+    background: rgba(88, 166, 255, 0.1);
+}
+
+/* --- Сетка новостей (Правильная адаптивная сетка) --- */
+.news-grid {
+    display: grid;
+    /* Автоматически создает колонки от 320px. На ПК их будет 2-3, на телефоне 1 */
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+/* --- Карточка новости (Горизонтальная, как на скрине) --- */
+.news-card {
+    background: var(--card-bg);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: row; /* Картинка слева, текст справа */
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease;
+    min-height: 250px;
+}
+
+/* На мобильных устройствах карточка становится вертикальной */
+@media (max-width: 600px) {
+    .news-card {
+        flex-direction: column;
+    }
+}
+
+.news-card:hover {
+    transform: translateY(-3px);
+}
+
+.news-card__image-wrapper {
+    flex: 0 0 45%; /* Картинка занимает 45% ширины карточки */
+    overflow: hidden;
+    background-color: #e9ecef;
+}
+
+.news-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.news-card__content {
+    flex: 1;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Прижимает Read More к низу */
+    color: var(--text-dark);
+}
+
+.news-card__title {
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1.3;
+    margin-bottom: 10px;
+    color: #000;
+}
+
+.news-card__source {
+    font-size: 13px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+/* Зеленая полоска под источником */
+.news-card__source::after {
+    content: '';
+    display: block;
+    width: 30px;
+    height: 3px;
+    background-color: #2ea043; /* Зеленая полоска */
+    margin-top: 8px;
+    border-radius: 2px;
+}
+
+.news-card__description {
+    font-size: 15px;
+    color: #444;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.news-card__link {
+    align-self: flex-end; /* Ссылка прижата вправо */
+    text-decoration: none;
+    color: #2ea043; /* Зеленый цвет */
+    font-weight: 700;
+    font-size: 15px;
+    transition: color 0.2s;
+}
+
+.news-card__link:hover {
+    color: #238636;
+}
+
+/* --- Футер --- */
+.footer {
+    margin-top: auto;
+    background-color: var(--header-bg);
+    padding: 30px 0;
+    border-top: 1px solid var(--border-color);
+}
+
+.footer__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+@media (min-width: 768px) {
+    .footer__container {
+        flex-direction: row;
+        justify-content: center;
+    }
+}
+
+.footer__info {
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 20px;
+    font-size: 15px;
+    color: var(--text-muted);
 }
-footer .copyright {
-    font-size: 14px;
-    color: #333;
-    text-align: center;
+
+.footer__link {
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s;
 }
-footer .copyright a {
-    color: #444;
+
+.footer__link:hover {
+    color: #ffffff;
 }
-footer .copyright a:hover {
-    color: #555;
-}
-footer .copyright:before {
-    content: '©';
+
+.footer__logo img {
+    height: 40px;
+    width: auto;
 }

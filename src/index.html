@@ -1,49 +1,64 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-        <title>NewsPortal</title>
+        <title>News Portal | TS Edition</title>
+        <!-- Подключаем современный шрифт -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     </head>
     <body>
-        <header>
-            <h1>News Portal</h1>
+        <header class="header">
+            <div class="container header__container">
+                <h1 class="header__title">News Portal</h1>
+            </div>
         </header>
-        <main>
-            <div class="sources buttons"></div>
-            <div class="news"></div>
+        
+        <main class="main container">
+            <!-- Навигация по категориям/источникам -->
+            <div class="sources-buttons"></div>
+            <!-- Сетка новостей -->
+            <div class="news-grid"></div>
         </main>
-        <footer>
-            <p class="copyright">
-                Copyright <a href="https://newsapi.org">NewsAPI</a>
-            </p>
+
+        <footer class="footer">
+            <div class="container footer__container">
+                <div class="footer__info">
+                    <p>&copy; <span id="current-year">2024</span> News Portal</p>
+                    <a href="https://github.com/ВАШ_НИК_НА_GITHUB" target="_blank" class="footer__link">My GitHub</a>
+                </div>
+                <a href="https://rs.school/courses/javascript" target="_blank" class="footer__logo">
+                    <img src="https://rs.school/_next/static/media/rss-logo.c19ce1b4.svg" alt="RS School Logo">
+                </a>
+            </div>
         </footer>
 
+        <!-- Шаблоны (оставляем ваши, но немного обновим классы) -->
         <template id="sourceItemTemp">
-            <div class="source__item">
-                <span class="source__item-name"></span>
-            </div>
+            <button class="source-btn">
+                <span class="source-btn__name"></span>
+            </button>
         </template>
 
         <template id="newsItemTemp">
-            <div class="news__item">
-                <div class="news__meta">
-                    <div class="news__meta-photo"></div>
-                    <ul class="news__meta-details">
-                        <li class="news__meta-author"></li>
-                        <li class="news__meta-date"></li>
-                    </ul>
+            <article class="news-card">
+                <div class="news-card__image-wrapper">
+                    <img class="news-card__image" src="" alt="News Image" loading="lazy">
                 </div>
-                <div class="news__description">
-                    <h2 class="news__description-title"></h2>
-                    <h3 class="news__description-source"></h3>
-                    <p class="news__description-content"></p>
-                    <p class="news__read-more">
-                        <a href="#">Read More</a>
-                    </p>
+                <div class="news-card__content">
+                    <div class="news-card__meta">
+                        <span class="news-card__author"></span>
+                        <span class="news-card__date"></span>
+                    </div>
+                    <h2 class="news-card__title"></h2>
+                    <h3 class="news-card__source"></h3>
+                    <p class="news-card__description"></p>
+                    <a href="#" class="news-card__link" target="_blank">Read More &rarr;</a>
                 </div>
-            </div>
+            </article>
         </template>
     </body>
 </html>

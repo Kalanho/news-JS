@@ -1,18 +1,22 @@
-import { NewsApiResponse, NewsCategory, NewsLanguage } from '../types/types';
+import { IArticle } from '../types/types';
+import { NewsCategory } from '../types/enums';
 
 export class NewsApi {
-  // private модификатор для сокрытия ключа и базового URL
   private readonly apiKey: string;
-  private readonly baseUrl: string = 'https://newsapi.org/v2';
+  // ⚠️ ВАЖНО: Используем прокси из задания для деплоя на GitHub Pages
+  private readonly baseUrl: string = 'https://rss-news-api.onrender.com/';
 
   constructor(apiKey: string) {
     this.apiKey = apiKey;
   }
 
-  // Использование Generics <T> для универсального метода запроса
+  // Generics для универсального запроса
   private async fetchData<T>(url: string): Promise<T> {
     const response = await fetch(url, {
-      headers: { 'X-Api-Key': this.apiKey },
+      // Прокси от RSSchool может не требовать ключ, но если требует - передаем
+      headers: {
+         'X-Api-Key': this.apiKey,
+      }
     });
     
     if (!response.ok) {
@@ -22,12 +26,13 @@ export class NewsApi {
     return (await response.json()) as T;
   }
 
-  // public метод для получения новостей
-  public async getTopHeadlines(
-    category: NewsCategory = NewsCategory.GENERAL,
-    language: NewsLanguage = NewsLanguage.EN
-  ): Promise<NewsApiResponse> {
-    const url = `${this.baseUrl}/top-headlines?category=${category}&language=${language}`;
-    return this.fetchData<NewsApiResponse>(url);
+  public async getTopHeadlines(category: NewsCategory): Promise<IArticle[]> {
+    // Формируем URL запроса
+    const url = `${this.baseUrl}top-headlines?category=${category}&language=en&apiKey=${this.apiKey}`;
+    
+    // Прокси возвращает объект { status, totalResults, articles }
+    // Нам нужно вытащить оттуда только массив articles
+    const response = await this.fetchData<{ articles: IArticle[] }>(url);
+    return response.articles;
   }
 }

@@ -1,27 +1,40 @@
-import { IArticle } from './types/types';
+// 1. Объявляем process для TypeScript (чтобы он не ругался)
+declare const process: { env: { API_KEY: string } };
+
+import './global.css'; // Подключаем стили
 import { NewsApi } from './api/NewsApi';
+import { NewsCard } from './components/NewsCard';
+import { IArticle } from './types/types';
+import { NewsCategory } from './types/enums'; // Используем enum
 
-// Используем Partial, так как данные могут подгружаться не сразу
-let currentArticles: Partial<IArticle[]> = [];
+// Инициализация
+const api = new NewsApi(process.env.API_KEY || '');
+const cardRenderer = new NewsCard();
+const newsContainer = document.querySelector('.news-grid') as HTMLElement;
 
-const api = new NewsApi('YOUR_API_KEY');
+// Функция отрисовки (типизирована, ничего не возвращает -> void)
+function renderNews(articles: IArticle[]): void {
+  newsContainer.innerHTML = ''; // Очищаем контейнер
+  
+  articles.forEach((article: IArticle) => {
+    const card = cardRenderer.render(article);
+    newsContainer.appendChild(card);
+  });
+}
 
+// Асинхронная загрузка данных
 async function loadNews(): Promise<void> {
   try {
-    const response = await api.getTopHeadlines();
-    currentArticles = response.articles;
-    renderNews(currentArticles);
-  } catch (error) {
-    console.error(error);
+    // Пример использования Enum
+    const articles = await api.getTopHeadlines(NewsCategory.GENERAL);
+    renderNews(articles);
+  } catch (error: unknown) {
+    // Обработка ошибки без any
+    if (error instanceof Error) {
+      console.error('Failed to load news:', error.message);
+    }
   }
 }
 
-// Типизация функции, которая не возвращает значение (void)
-function renderNews(articles: Partial<IArticle[]>): void {
-  const container = document.getElementById('news-container');
-  if (container) {
-    // ... логика рендера
-  }
-}
-
+// Запуск
 loadNews();
