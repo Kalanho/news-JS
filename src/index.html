@@ -3,64 +3,73 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-        <title>News Portal | TS Edition</title>
-        <!-- Подключаем современный шрифт -->
+        <title>News Portal</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     </head>
     <body>
-        <header class="header">
-            <div class="container header__container">
-                <h1 class="header__title">News Portal</h1>
-            </div>
+        <header>
+            <h1>News Portal</h1>
         </header>
-        
-        <main class="main container">
-            <!-- Навигация по категориям/источникам (Кнопки для визуала) -->
-            <div class="sources-buttons">
-                <button class="source-btn active">General</button>
-                <button class="source-btn">Business</button>
-                <button class="source-btn">Technology</button>
-                <button class="source-btn">Sports</button>
-                <button class="source-btn">Health</button>
-                <button class="source-btn">Science</button>
+        <main>
+            <div class="sources-combobox">
+                <!-- Иконка поиска (лупа) -->
+                <svg class="sources-combobox__icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                
+                <input 
+                    type="text" 
+                    class="sources-combobox__input" 
+                    placeholder="Поиск по источникам..." 
+                    autocomplete="off" 
+                    role="combobox" 
+                    aria-expanded="false" 
+                    aria-controls="sources-listbox" 
+                />
+                
+                <button type="button" class="sources-combobox__toggle" aria-label="Открыть список">▾</button>
+                
+                <ul class="sources-combobox__list" id="sources-listbox" role="listbox" hidden></ul>
             </div>
             
-            <!-- Сетка новостей (сюда JS будет вставлять карточки) -->
-            <div class="news-grid"></div>
+            <div class="news"></div>
         </main>
-
-        <footer class="footer">
-            <div class="container footer__container">
-                <div class="footer__info">
-                    <p>&copy; <span id="current-year">2026</span> News Portal</p>
-                    <a href="https://github.com/Kalanho" target="_blank" class="footer__link">My GitHub</a>
-                </div>
-                <a href="https://rs.school/courses/javascript" target="_blank" class="footer__logo">
-                    <img src="https://rs.school/_next/static/media/rss-logo.c19ce1b4.svg" alt="RS School Logo">
-                </a>
+        <footer>
+            <div class="footer-wrapper">
+                <img src="https://rs.school/_next/static/media/rss-logo.c19ce1b4.svg" alt="Logo RS School">
+                <a href="https://rs.school/courses/javascript" class="course">RS SCHOOL</a>
+                <a href="https://github.com/Kalanho" class="github-link">GitHub</a>
+                <span>2026</span>
             </div>
         </footer>
 
-        <!-- Шаблон карточки новости -->
+        <!-- Шаблоны -->
+        <template id="sourceItemTemp">
+            <div class="source__item">
+                <span class="source__item-name"></span>
+            </div>
+        </template>
+
         <template id="newsItemTemp">
-            <article class="news-card">
-                <div class="news-card__image-wrapper">
-                    <img class="news-card__image" src="" alt="News Image" loading="lazy">
+            <div class="news__item">
+                <div class="news__meta">
+                    <div class="news__meta-photo"></div>
+                    <ul class="news__meta-details">
+                        <li class="news__meta-author"></li>
+                        <li class="news__meta-date"></li>
+                    </ul>
                 </div>
-                <div class="news-card__content">
-                    <!-- Блок с источником (под стили зеленой полоски) -->
-                    <div class="news-card__source-wrapper">
-                        <h3 class="news-card__source">NEWS SOURCE</h3>
-                    </div>
-                    
-                    <h2 class="news-card__title"></h2>
-                    <p class="news-card__description"></p>
-                    <a href="#" class="news-card__link" target="_blank">Read More &rarr;</a>
+                <div class="news__description">
+                    <h2 class="news__description-title"></h2>
+                    <h3 class="news__description-source"></h3>
+                    <p class="news__description-content"></p>
+                    <p class="news__read-more">
+                        <a href="#">Read More</a>
+                    </p>
                 </div>
-            </article>
+            </div>
         </template>
     </body>
 </html>

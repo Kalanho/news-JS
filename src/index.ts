@@ -1,72 +1,68 @@
-import './global.css';
-import { NewsApi } from './api/NewsApi';
-import { NewsCard } from './components/NewsCard';
-import { SourceList } from './components/SourceList'; 
-import { IArticle, ISource } from './types/types';
+import './css/global.css';
+import './css/news.css';
+import './css/sources.css';
+import AppView from './components/AppView';
+import AppLoader from './api/AppLoader';
+import { NewsApiResponse, SourcesApiResponse, NewsSource } from './types/types';
 
-const api = new NewsApi();
-const cardRenderer = new NewsCard();
-const sourceList = new SourceList('.sources-buttons'); 
-const newsContainer = document.querySelector('.news-grid') as HTMLElement;
+const view = new AppView();
+const loader = new AppLoader();
 
-
-let allArticles: IArticle[] = [];
-
-
-function renderNews(articles: IArticle[]): void {
-  newsContainer.innerHTML = '';
-  if (articles.length === 0) {
-    newsContainer.innerHTML = '<p style="color: white;">Новостей не найдено.</p>';
-    return;
-  }
-  articles.forEach((article: IArticle) => {
-    const card = cardRenderer.render(article);
-    newsContainer.appendChild(card);
-  });
-}
-
-
-function filterNewsBySource(sourceId: string): void {
-  if (!sourceId) {
-    renderNews(allArticles); 
-    return;
-  }
-  
-
-  const filtered = allArticles.filter(article => {
-   
-      return article.source && article.source.name === sourceId;
-  });
-  
-  renderNews(filtered);
-}
-
-
-async function loadData(): Promise<void> {
-  try {
-
-    const [articles, sources] = await Promise.all([
-      api.getTopHeadlines(),
-      api.getSources()
-    ]);
-
-    allArticles = articles; 
-
-    
-    renderNews(allArticles);
-
-    
-    sourceList.render(sources, (sourceId: string) => {
-     
-        filterNewsBySource(sourceId);
+// 1. Функция для загрузки списка ВСЕХ источников
+function loadSources(): void {
+    loader.getResp<SourcesApiResponse>({ endpoint: 'mocks/sources' }, (data: SourcesApiResponse) => {
+        if (data && data.sources && data.sources.length > 0) {
+            console.log(`✅ Загружено ${data.sources.length} источников!`);
+            view.drawSources(data); // Передаем все источники в комбобокс
+        } else {
+            console.warn('⚠️ Прокси не вернул источники, используем заглушки.');
+            // Если прокси молчит, показываем хотя бы эти 5
+            view.drawSources({
+                status: 'ok',
+                sources: [
+                    { id: 'bbc-news', name: 'BBC News' },
+                    { id: 'cnn', name: 'CNN' },
+                    { id: 'axios', name: 'Axios' }
+                ]
+            });
+        }
     });
-
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error('Failed to load data:', error.message);
-    }
-  }
 }
 
+// 2. Функция для загрузки новостей (по умолчанию все)
+function loadNews(sourceId: string = ''): void {
+    // Если sourceId пустой, передаем пустую строку (прокси отдаст всё)
+    const options = sourceId ? { sources: sourceId } : {};
+    
+    loader.getResp<NewsApiResponse>({ endpoint: 'mocks/everything', options }, (data: NewsApiResponse) => {
+        if (data && data.articles && data.articles.length > 0) {
+            console.log('✅ Новости загружены:', data.articles.length);
+            view.drawNews(data);
+        } else {
+            console.warn('⚠️ Новости не загружены.');
+        }
+    });
+}
 
-loadData();
+// 3. Инициализация
+function init(): void {
+    // Загружаем реальные источники
+    loadSources();
+
+    // Загружаем новости по умолчанию
+    loadNews();
+
+    // Подписываемся на выбор источника в комбобоксе
+    view.onSourceSelect((source: NewsSource) => {
+        console.log('Выбран источник:', source.name, source.id);
+        if (source.id) {
+            loadNews(source.id); // Загружаем новости только для этого источника
+        } else {
+            loadNews(); // Если id нет, грузим все
+        }
+    });
+}
+
+// Очищаем кэш, чтобы загрузить свежие данные
+localStorage.clear();
+init();

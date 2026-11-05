@@ -11,10 +11,8 @@ export class NewsApi {
     return (await response.json()) as T;
   }
 
-
   public async getSources(): Promise<ISource[]> {
     const url = `${this.baseUrl}mocks/sources`;
- 
     const response = await this.fetchData<{ sources: ISource[] }>(url);
     return response.sources;
   }
