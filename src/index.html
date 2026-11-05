@@ -1,25 +1,51 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-        <title>NewsPortal</title>
+        <title>News Portal</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     </head>
     <body>
         <header>
             <h1>News Portal</h1>
         </header>
         <main>
-            <div class="sources buttons"></div>
+            <div class="sources-combobox">
+                <!-- Иконка поиска (лупа) -->
+                <svg class="sources-combobox__icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                
+                <input 
+                    type="text" 
+                    class="sources-combobox__input" 
+                    placeholder="Поиск по источникам..." 
+                    autocomplete="off" 
+                    role="combobox" 
+                    aria-expanded="false" 
+                    aria-controls="sources-listbox" 
+                />
+                
+                <button type="button" class="sources-combobox__toggle" aria-label="Открыть список">▾</button>
+                
+                <ul class="sources-combobox__list" id="sources-listbox" role="listbox" hidden></ul>
+            </div>
+            
             <div class="news"></div>
         </main>
         <footer>
-            <p class="copyright">
-                Copyright <a href="https://newsapi.org">NewsAPI</a>
-            </p>
+            <div class="footer-wrapper">
+                <img src="https://rs.school/_next/static/media/rss-logo.c19ce1b4.svg" alt="Logo RS School">
+                <a href="https://rs.school/courses/javascript" class="course">RS SCHOOL</a>
+                <a href="https://github.com/Kalanho" class="github-link">GitHub</a>
+                <span>2026</span>
+            </div>
         </footer>
 
+        <!-- Шаблоны -->
         <template id="sourceItemTemp">
             <div class="source__item">
                 <span class="source__item-name"></span>

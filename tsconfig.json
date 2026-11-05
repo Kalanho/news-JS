@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": true,
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "sourceMap": true,
+    "isolatedModules": true,
+    "types": []
+  },
+  "include": ["src/**/*.ts", "src/components/app/app.js", "src/components/controller/loader.js", "src/components/controller/controller.js", "src/components/controller/appLoader.js", "src/components/controller/appLoader.js", "src/components/controller/controller.js", "src/components/controller/loader.js", "src/components/view/appView.js", "src/components/view/sources/sources.js", "src/components/view/news/news.js"]
+}
